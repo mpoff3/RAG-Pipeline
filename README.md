@@ -100,8 +100,8 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline using Fa
 - LangChain Community: Additional LangChain components
 - LangChain HuggingFace: HuggingFace integration
 - FAISS: Vector storage
-- Mistral AI: Language model and embeddings
-- Sentence Transformers: Text embeddings
+- Mistral AI: Language model
+- Sentence Transformers: Text embeddings (all-MiniLM-L6-v2)
 - Python-dotenv: Environment variable management
 - Pydantic: Data validation
 - Pydantic Settings: Configuration management
@@ -110,7 +110,7 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline using Fa
 ### Document Processing
 - Chunk size: 1000 tokens
 - Chunk overlap: 200 tokens
-- Embedding model: Mistral AI embeddings
+- Embedding model: Sentence Transformers (all-MiniLM-L6-v2)
 
 ### Search Strategy
 - Hybrid search combining:
@@ -144,7 +144,6 @@ app/
 - **vector_store/**: Persistent storage for FAISS vector embeddings
 
 ## Performance Considerations
-- Document chunking optimized for Mistral AI's context window
 - Efficient vector storage with FAISS
 - CORS enabled for frontend integration
 - Proper error handling and logging
