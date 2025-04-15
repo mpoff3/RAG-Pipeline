@@ -119,16 +119,7 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline using Fa
 └── README.md       # Project documentation
 ```
 
-### Directory Purposes
-
-- **api/**: Contains FastAPI route handlers and endpoint definitions
-- **core/**: Houses application configuration and settings
-- **services/**: Implements core business logic and functionality
-- **uploads/**: Temporary storage for uploaded PDF files
-- **vector_store/**: Persistent storage for FAISS vector embeddings
-
 ## Performance Considerations
 - Efficient vector storage with FAISS
-- CORS enabled for frontend integration
 - Proper error handling and logging
 - Temporary file cleanup after processing 
