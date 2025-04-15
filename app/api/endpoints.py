@@ -8,6 +8,8 @@ from app.services.document_processor import DocumentProcessor
 from app.services.vector_store import VectorStore
 from app.services.llm_service import LLMService
 from pydantic import BaseModel
+import faiss
+import numpy as np
 
 router = APIRouter()
 document_processor = DocumentProcessor()
@@ -66,6 +68,60 @@ async def query_documents(request: QueryRequest):
             "response": response,
             "context_used": len(context)
         })
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/documents")
+async def list_documents():
+    """Get a list of all processed documents."""
+    try:
+        # Get unique document filenames from the vector store
+        document_names = set()
+        for doc in vector_store.documents:
+            if hasattr(doc, 'metadata') and 'filename' in doc.metadata:
+                document_names.add(doc.metadata['filename'])
+        
+        return JSONResponse({
+            "documents": sorted(list(document_names))
+        })
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/documents/{filename}")
+async def delete_document(filename: str):
+    """Delete a document from the vector store."""
+    try:
+        # Find and remove documents with matching filename
+        original_length = len(vector_store.documents)
+        vector_store.documents = [
+            doc for doc in vector_store.documents 
+            if not (hasattr(doc, 'metadata') and 
+                   'filename' in doc.metadata and 
+                   doc.metadata['filename'] == filename)
+        ]
+        
+        # If any documents were removed, rebuild the index
+        if len(vector_store.documents) < original_length:
+            # Rebuild the FAISS index
+            if vector_store.documents:
+                embeddings = vector_store.embeddings.embed_documents(
+                    [doc.page_content for doc in vector_store.documents]
+                )
+                vector_store.index = faiss.IndexFlatL2(len(embeddings[0]))
+                vector_store.index.add(np.array(embeddings).astype('float32'))
+            else:
+                vector_store.index = None
+            
+            # Save the updated store
+            vector_store.save_store()
+            
+            return JSONResponse({
+                "message": f"Document {filename} deleted successfully"
+            })
+        
+        raise HTTPException(status_code=404, detail=f"Document {filename} not found")
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) 

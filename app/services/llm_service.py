@@ -69,5 +69,5 @@ class LLMService:
         except Exception as e:
             logger.error(f"Error in Mistral AI API call: {str(e)}")
             if "401" in str(e):
-                return "Error: Invalid or missing Mistral AI API key. Please check your .env file."
+                return f"Error: Invalid or missing Mistral AI API key {settings.MISTRAL_API_KEY}. Please check your .env file."
             return f"I apologize, but I encountered an error while processing your request: {str(e)}" 
