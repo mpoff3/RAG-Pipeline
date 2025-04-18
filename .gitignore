@@ -9,6 +9,7 @@ __pycache__/
 .Python
 venv/
 ENV/
+.DS_Store
 
 # IDE
 .idea/
