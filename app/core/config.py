@@ -19,9 +19,9 @@ class Settings(BaseSettings):
     # Mistral AI Configuration
     MISTRAL_API_KEY: str = os.getenv("MISTRAL_API_KEY", "")
     
-    # File Storage
-    UPLOAD_DIR: Path = Path("uploads")
-    VECTOR_STORE_DIR: Path = Path("vector_store")
+    # File Storage - use environment variables with fallbacks
+    UPLOAD_DIR: Path = Path(os.getenv("UPLOAD_DIR", "uploads"))
+    VECTOR_STORE_DIR: Path = Path(os.getenv("VECTOR_STORE_DIR", "vector_store"))
     
     # Document Processing
     CHUNK_SIZE: int = 1000
@@ -45,6 +45,12 @@ if not settings.MISTRAL_API_KEY:
 else:
     logger.info("MISTRAL_API_KEY is set")
 
-# Create necessary directories
-settings.UPLOAD_DIR.mkdir(exist_ok=True)
-settings.VECTOR_STORE_DIR.mkdir(exist_ok=True) 
+# Create necessary directories with error handling
+try:
+    settings.UPLOAD_DIR.mkdir(exist_ok=True, parents=True)
+    settings.VECTOR_STORE_DIR.mkdir(exist_ok=True, parents=True)
+    logger.info(f"Created directories: {settings.UPLOAD_DIR}, {settings.VECTOR_STORE_DIR}")
+except Exception as e:
+    logger.warning(f"Could not create directories: {e}")
+    # Don't fail startup if directories can't be created
+    pass 
