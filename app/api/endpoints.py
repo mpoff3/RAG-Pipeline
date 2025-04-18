@@ -3,10 +3,10 @@ from fastapi.responses import JSONResponse
 from typing import List
 from pathlib import Path
 import shutil
-from app.core.config import settings
-from app.services.document_processor import DocumentProcessor
-from app.services.vector_store import VectorStore
-from app.services.llm_service import LLMService
+from ..core.config import settings
+from ..services.document_processor import DocumentProcessor
+from ..services.vector_store import VectorStore
+from ..services.llm_service import LLMService
 from pydantic import BaseModel
 import faiss
 import numpy as np
