@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from core.config import settings
-from api.endpoints import router
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
+from .core.config import settings
+from .api.endpoints import router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -20,10 +23,18 @@ app.add_middleware(
 # Include API router
 app.include_router(router, prefix=settings.API_V1_STR)
 
+# Mount the Next.js static files
+app.mount("/_next", StaticFiles(directory="frontend/.next"), name="next_static")
+
 @app.get("/")
 async def root():
-    return {
-        "message": "Welcome to the RAG Pipeline API",
-        "version": "1.0.0",
-        "docs_url": "/docs"
-    } 
+    return FileResponse("frontend/.next/server/pages/index.html")
+
+@app.get("/{catch_all:path}")
+async def catch_all(catch_all: str):
+    # Try to serve the static file
+    static_path = f"frontend/.next/server/pages/{catch_all}.html"
+    if os.path.exists(static_path):
+        return FileResponse(static_path)
+    # Fall back to index.html for client-side routing
+    return FileResponse("frontend/.next/server/pages/index.html") 
