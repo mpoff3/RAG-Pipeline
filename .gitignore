@@ -20,3 +20,5 @@ ENV/
 uploads/
 vector_store/
 *.pdf 
+
+.DS_Store
