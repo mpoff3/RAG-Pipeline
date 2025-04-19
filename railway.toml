@@ -10,22 +10,24 @@ restartPolicyMaxRetries = 10
 
 [deploy.env]
 PYTHON_VERSION = "3.11.0"
-NODE_VERSION = "18.x"
+NODE_VERSION = "18"
+NPM_VERSION = "9.8.1"
 UPLOAD_DIR = "/tmp/uploads"
 VECTOR_STORE_DIR = "/tmp/vector_store"
 PYTHONPATH = "/app"
 
 [phases.setup]
-nixPkgs = ["python311", "gcc", "nodejs", "npm"]
+nixPkgs = ["python311", "gcc", "nodejs-18_x", "npm"]
+aptPkgs = ["nodejs"]
 
 [phases.install]
 cmds = [
-    "cd frontend && npm install",
-    "python -m venv /opt/venv && . /opt/venv/bin/activate && pip install --no-cache-dir -r requirements.txt"
+    ". /opt/venv/bin/activate && pip install --no-cache-dir -r requirements.txt",
+    "cd frontend && npm install --legacy-peer-deps"
 ]
 
 [phases.build]
 cmds = [
-    "cd frontend && npm run build",
-    "cd .."
+    "cd frontend && NODE_ENV=production npm run build",
+    "pwd && ls -la"
 ] 
