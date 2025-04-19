@@ -24,17 +24,10 @@ app.add_middleware(
 app.include_router(router, prefix=settings.API_V1_STR)
 
 # Mount the Next.js static files
-app.mount("/_next", StaticFiles(directory="frontend/.next"), name="next_static")
-
-@app.get("/")
-async def root():
-    return FileResponse("frontend/.next/server/pages/index.html")
-
-@app.get("/{catch_all:path}")
-async def catch_all(catch_all: str):
-    # Try to serve the static file
-    static_path = f"frontend/.next/server/pages/{catch_all}.html"
-    if os.path.exists(static_path):
-        return FileResponse(static_path)
-    # Fall back to index.html for client-side routing
-    return FileResponse("frontend/.next/server/pages/index.html") 
+  # Mount the exported Next.js static front-end
+  # (static files copied into app/static during build)
+  app.mount(
+      "/",
+      StaticFiles(directory=os.path.join(os.getcwd(), "app/static"), html=True),
+      name="static_frontend",
+  )

@@ -28,6 +28,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-    "cd frontend && NODE_ENV=production npm run build",
-    "pwd && ls -la"
-] 
+  # Build and export the Next.js front-end, then copy it into the FastAPI static folder
+  "cd frontend && NODE_ENV=production npm run build && npm run export",
+  "mkdir -p app/static && cp -a frontend/out/. app/static/"
+]
