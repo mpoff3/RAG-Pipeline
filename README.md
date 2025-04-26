@@ -2,7 +2,12 @@
 
 This project implements a Retrieval-Augmented Generation (RAG) pipeline using FastAPI, Next.js, and Mistral AI for processing and querying PDF documents.
 
+**Deployed version available here:** https://rag-pipeline-one.vercel.app/
+⚠️ Warning! The deployed version has very painful latency because the backend is deployed on Render's free tier which operates with 0.1 vCPUs.
+
 **Note:** The intent classification is very basic and rule-based. You have to start your query with a question word in order the chat bot to do anything interesting. Otherwise it just says: "Hello! I'm here to help you with questions about the documents in our knowledge base. What would you like to know?"
+
+**Another Note:** The deployed version of this app seems to struggle with ingesting some PDFs but not others. I haven't been yet figured out what makes it work and what makes it not work. I haven't seen this issue when it's hosted locally.
 
 ## System Architecture
 
