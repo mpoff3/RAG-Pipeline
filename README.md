@@ -2,13 +2,14 @@
 
 This project implements a Retrieval-Augmented Generation (RAG) pipeline using FastAPI, Next.js, and Mistral AI for processing and querying PDF documents.
 
+**Note:** The intent classification is very basic and rule-based. You have to start your query with a question word in order the chat bot to do anything interesting. Otherwise it just says: "Hello! I'm here to help you with questions about the documents in our knowledge base. What would you like to know?"
+
 ## System Architecture
 
 ### Components Overview
 
 1. **Frontend Layer**
    - Next.js web application
-   - TypeScript for type safety
    - Tailwind CSS for styling
    - Real-time document upload and chat interface
 
@@ -22,10 +23,10 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline using Fa
       - Hybrid search combining semantic and keyword matching
 
 4. **Generation Layer**
-   - Response generation using Mistral AI
-      - Context-aware answer generation
+   - Response generation using Mistral AI API
+      - Model used: mistral-tiny
 
-## Setup Instructions
+## Setup Instructions to Host Locally
 
 ### Backend Setup
 
@@ -39,7 +40,7 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline using Fa
    ```bash
    pip install -r requirements.txt
    ```
-4. Create a `.env` file with your Mistral AI API key:
+4. Create a `.env` file (use `.env.example` as a template) with your Mistral AI API key:
    ```
    MISTRAL_API_KEY=your_api_key_here
    ```
@@ -80,8 +81,8 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline using Fa
 - PyPDF2: PDF processing
 - LangChain: Document processing and chunking
 - FAISS: Vector storage
-- Mistral AI: Language model
-- Sentence Transformers: Text embeddings (all-MiniLM-L6-v2)
+- Mistral AI: mistral-tiny used for the chat bot component
+- Sentence Transformers: Chunk and query embeddings (all-MiniLM-L6-v2)
 - Python-dotenv: Environment variable management
 - Pydantic: Data validation
 
@@ -118,8 +119,3 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline using Fa
 │
 └── README.md       # Project documentation
 ```
-
-## Performance Considerations
-- Efficient vector storage with FAISS
-- Proper error handling and logging
-- Temporary file cleanup after processing 
